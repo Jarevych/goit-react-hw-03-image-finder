@@ -1,33 +1,59 @@
 import React from 'react';
+import { StyledAppContainer } from './App.styled';
 import { fetchImages } from './api';
+import { Dna } from 'react-loader-spinner';
 
 export class App extends React.Component {
   state = {
     query: null,
     page: 1,
     images: null,
+    isLoading: false,
+    loadMore: false,
   };
 
   handleSearchSubmit = e => {
     e.preventDefault();
     const inputValue = e.currentTarget.elements.searchImage.value;
-    console.log(e.currentTarget.elements.searchImage.value);
-    this.setState({ query: inputValue });
+    if (inputValue) {
+      this.setState({ query: inputValue, images: null, page: 1 });
+      e.currentTarget.reset();
+    }
   };
-  fetchImagesByQuery = async () => {
+
+  handleLoadMore = async e => {
+    e.preventDefault();
     try {
-      const searchQuery = this.state.query;
-      const images = await fetchImages(searchQuery);
-      this.setState({ images: images });
-      console.log(this.state.images);
+      console.log(this.state.page);
+      const nextPage = this.state.page + 1;
+      await this.setState({ page: nextPage }, async () => {});
     } catch (error) {}
   };
-  componentDidMount() {
-    // Виконуємо завантаження даних за допомогою початкового стану query
-    this.fetchImagesByQuery(this.state.query);
-  }
+
+  fetchImagesByQuery = async () => {
+    try {
+      this.setState({ loadMore: false });
+      this.setState({ isLoading: true });
+      const searchQuery = this.state.query;
+      const page = this.state.page;
+      const { hits } = await fetchImages(searchQuery, page);
+     
+        this.setState(prevState => ({
+          images: prevState.images ? [...prevState.images, ...hits] : hits,
+        }));
+      
+      console.log(this.state.images);
+    } catch (error) {
+    } finally {
+      this.setState({ isLoading: false });
+      this.setState({ loadMore: true });
+    }
+  };
   componentDidUpdate(_, prevState) {
-    if (prevState.query !== this.state.query) {
+    if (
+      this.state.page !== prevState.page ||
+      prevState.query !== this.state.query
+    ) {
       this.fetchImagesByQuery();
     }
     console.log(this.state.images);
@@ -37,7 +63,7 @@ export class App extends React.Component {
       Array.isArray(this.state.images) && this.state.images.length;
 
     return (
-      <div>
+      <StyledAppContainer>
         <header className="searchbar">
           <form className="form" onSubmit={this.handleSearchSubmit}>
             <button type="submit" className="button">
@@ -53,14 +79,40 @@ export class App extends React.Component {
             />
           </form>
         </header>
+        {this.state.isLoading && (
+          <div>
+            <Dna
+            
+              className="spinner"
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="dna-loading"
+              wrapperStyle={{
+                marginLeft: 100px
+              }}
+              wrapperClass="dna-wrapper"
+            />
+          </div>
+        )}
         <ul className="gallery">
-          {showImages && this.state.images.map(image => (
+          {showImages &&
+            this.state.images.map(image => (
               <li className="gallery-item" key={image.id}>
                 <img src={image.webformatURL} alt={image.tags} />
               </li>
             ))}
         </ul>
-      </div>
+        {this.state.loadMore && (
+          <button
+            className="loadbtn"
+            type="button"
+            onClick={this.handleLoadMore}
+          >
+            Load More
+          </button>
+        )}
+      </StyledAppContainer>
     );
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyledAppContainer } from './App.styled';
 import { fetchImages } from './api';
 import { Dna } from 'react-loader-spinner';
+import Modal from './Modal'
 
 export class App extends React.Component {
   state = {
@@ -10,6 +11,7 @@ export class App extends React.Component {
     images: null,
     isLoading: false,
     loadMore: false,
+    selectedImageUrl: null,
   };
 
   handleSearchSubmit = e => {
@@ -37,11 +39,11 @@ export class App extends React.Component {
       const searchQuery = this.state.query;
       const page = this.state.page;
       const { hits } = await fetchImages(searchQuery, page);
-     
-        this.setState(prevState => ({
-          images: prevState.images ? [...prevState.images, ...hits] : hits,
-        }));
-      
+
+      this.setState(prevState => ({
+        images: prevState.images ? [...prevState.images, ...hits] : hits,
+      }));
+
       console.log(this.state.images);
     } catch (error) {
     } finally {
@@ -58,6 +60,15 @@ export class App extends React.Component {
     }
     console.log(this.state.images);
   }
+
+  openFullSize = (imageUrl) => {
+    this.setState({ selectedImageUrl: imageUrl })
+  };
+  handleCloseModal = () => {
+    this.setState({ selectedImageUrl: null })
+
+  }
+
   render() {
     const showImages =
       Array.isArray(this.state.images) && this.state.images.length;
@@ -80,17 +91,13 @@ export class App extends React.Component {
           </form>
         </header>
         {this.state.isLoading && (
-          <div>
+          <div className="spinner">
             <Dna
-            
-              className="spinner"
               visible={true}
               height="80"
               width="80"
               ariaLabel="dna-loading"
-              wrapperStyle={{
-                marginLeft: 100px
-              }}
+              wrapperStyle={{}}
               wrapperClass="dna-wrapper"
             />
           </div>
@@ -99,7 +106,11 @@ export class App extends React.Component {
           {showImages &&
             this.state.images.map(image => (
               <li className="gallery-item" key={image.id}>
-                <img src={image.webformatURL} alt={image.tags} />
+                <img
+                  src={image.webformatURL}
+                  alt={image.tags}
+                  onClick={() =>this.openFullSize(image.largeImageURL)}
+                />
               </li>
             ))}
         </ul>
@@ -111,7 +122,11 @@ export class App extends React.Component {
           >
             Load More
           </button>
+          
         )}
+    {this.state.selectedImageUrl && (<Modal imageUrl={this.state.selectedImageUrl} onClose={this.handleCloseModal}/>)}
+
+        
       </StyledAppContainer>
     );
   }

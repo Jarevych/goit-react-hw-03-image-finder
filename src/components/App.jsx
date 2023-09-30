@@ -2,7 +2,7 @@ import React from 'react';
 import { StyledAppContainer } from './App.styled';
 import { fetchImages } from './api';
 import { Dna } from 'react-loader-spinner';
-import Modal from './Modal'
+import Modal from './Modal';
 
 export class App extends React.Component {
   state = {
@@ -12,6 +12,7 @@ export class App extends React.Component {
     isLoading: false,
     loadMore: false,
     selectedImageUrl: null,
+    selectedImageTag: null,
   };
 
   handleSearchSubmit = e => {
@@ -61,13 +62,12 @@ export class App extends React.Component {
     console.log(this.state.images);
   }
 
-  openFullSize = (imageUrl) => {
-    this.setState({ selectedImageUrl: imageUrl })
+  openFullSize = (imageUrl, imageTag) => {
+    this.setState({ selectedImageUrl: imageUrl, selectedImageTag: imageTag });
   };
   handleCloseModal = () => {
-    this.setState({ selectedImageUrl: null })
-
-  }
+    this.setState({ selectedImageUrl: null });
+  };
 
   render() {
     const showImages =
@@ -109,7 +109,9 @@ export class App extends React.Component {
                 <img
                   src={image.webformatURL}
                   alt={image.tags}
-                  onClick={() =>this.openFullSize(image.largeImageURL)}
+                  onClick={() =>
+                    this.openFullSize(image.largeImageURL, image.tags)
+                  }
                 />
               </li>
             ))}
@@ -122,11 +124,14 @@ export class App extends React.Component {
           >
             Load More
           </button>
-          
         )}
-    {this.state.selectedImageUrl && (<Modal imageUrl={this.state.selectedImageUrl} onClose={this.handleCloseModal}/>)}
-
-        
+        {this.state.selectedImageUrl && (
+          <Modal
+            imageUrl={this.state.selectedImageUrl}
+            imageTag={this.state.selectedImageTag}
+            onClose={this.handleCloseModal}
+          />
+        )}
       </StyledAppContainer>
     );
   }

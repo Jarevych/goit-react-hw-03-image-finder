@@ -27,7 +27,6 @@ header {
     height: 38px;
     display: flex;
     font-size: 24px;
-  
   }
   input {
     width: 400px;
@@ -40,7 +39,6 @@ header {
     gap: 20px;
     flex-wrap: wrap;
   }
-  
   li {
     display: flex;
   }
@@ -48,8 +46,6 @@ header {
     // background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     margin: 0 auto;
-
-   
   }
   .loadbtn {
     margin: 0 auto;
@@ -63,21 +59,20 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Темний колір з прозорістю */
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    opacity: 0; /* Початкова прозорість: оверлей прихований */
+    opacity: 0; 
     transition: opacity 0.8s ease;
   }
   .modal {
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    max-width: 100%; /* Максимальна ширина модального вікна */
-    max-height: 100%; /* Максимальна висота модального вікна */
+    max-width: 100%; 
+    max-height: 100%; 
     overflow: auto;
     opacity: 0; 
     transition: opacity 0.8s ease;
@@ -85,7 +80,6 @@ header {
   .modal.visible {
     opacity: 1; 
   }
- 
   .overlay.visible {
     opacity: 1; 
   }

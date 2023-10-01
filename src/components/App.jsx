@@ -3,6 +3,8 @@ import { StyledAppContainer } from './App.styled';
 import { fetchImages } from './api';
 import { Dna } from 'react-loader-spinner';
 import Modal from './Modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export class App extends React.Component {
   state = {
@@ -39,17 +41,18 @@ export class App extends React.Component {
       this.setState({ isLoading: true });
       const searchQuery = this.state.query;
       const page = this.state.page;
-      const { hits } = await fetchImages(searchQuery, page);
+      const response = await fetchImages(searchQuery, page);
+      const { hits, totalHits } = response;
 
       this.setState(prevState => ({
         images: prevState.images ? [...prevState.images, ...hits] : hits,
+        loadMore: this.state.page < Math.ceil(totalHits / 12 )
       }));
 
       console.log(this.state.images);
     } catch (error) {
     } finally {
       this.setState({ isLoading: false });
-      this.setState({ loadMore: true });
     }
   };
   componentDidUpdate(_, prevState) {
@@ -77,9 +80,6 @@ export class App extends React.Component {
       <StyledAppContainer>
         <header className="searchbar">
           <form className="form" onSubmit={this.handleSearchSubmit}>
-            <button type="submit" className="button">
-              <span className="button-label">Search</span>
-            </button>
             <input
               className="input"
               type="text"
@@ -88,6 +88,9 @@ export class App extends React.Component {
               name="searchImage"
               placeholder="Search images and photos"
             />
+            <button type="submit" className="searchbutton">
+              <FontAwesomeIcon icon={faMagnifyingGlass} beat />
+            </button>
           </form>
         </header>
         {this.state.isLoading && (

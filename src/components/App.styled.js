@@ -2,33 +2,26 @@ import styled from 'styled-components';
 
 export const StyledAppContainer = styled.div`
 header {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
     background-color: rgb(34, 75, 153);
-    align-items: center;
   }
-  button {
-    color: white;
-    background-color: blue;
-    border: 1px solid blue;
-    border-radius: 10px;
-    font-size: 24px;
-    padding: 8px;
-    margin-right: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .searchbutton {
+    position: absolute;
+    height: 38px;
+    background: none;
+    border: none;
   }
   button:active {
     background-color: #2d19e2;
   }
   form {
-    height: 38px;
+    margin: 0 auto;
     display: flex;
-    font-size: 24px;
   }
   input {
+    height: 38px;
+    font-size: 20px;
+    padding-left: 24px;
+    position: absolute;
     width: 400px;
     border-radius: 10px;
     border: none;
@@ -43,11 +36,20 @@ header {
     display: flex;
   }
   .spinner {
-    // background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     margin: 0 auto;
   }
   .loadbtn {
+    color: white;
+    background-color: blue;
+    border: 1px solid blue;
+    border-radius: 10px;
+    font-size: 24px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
     margin: 0 auto;
   }
   .overlayDiv {
@@ -77,10 +79,10 @@ header {
     opacity: 0; 
     transition: opacity 0.8s ease;
   }
-  .modal.visible {
+  .modal .visible {
     opacity: 1; 
   }
-  .overlay.visible {
+  .overlay .visible {
     opacity: 1; 
   }
 `;

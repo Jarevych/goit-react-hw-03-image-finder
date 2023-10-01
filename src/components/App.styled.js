@@ -77,12 +77,12 @@ header {
     max-height: 100%; 
     overflow: auto;
     opacity: 0; 
-    transition: opacity 0.8s ease;
+    transition: transform 0.15s ease 0s, opacity 0.15s ease 0s;
   }
-  .modal .visible {
+  .modal.visible {
     opacity: 1; 
   }
-  .overlay .visible {
+  .overlay.visible {
     opacity: 1; 
   }
 `;

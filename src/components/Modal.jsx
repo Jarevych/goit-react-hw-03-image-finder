@@ -1,12 +1,12 @@
 import React from 'react';
 
 class Modal extends React.Component {
-  handleCloseModal = (e) => {
+  handleCloseModal = e => {
     const { onClose } = this.props;
     if (e.target === e.currentTarget) {
-      onClose()
+      onClose();
     }
-   }
+  };
   render() {
     const { imageUrl, imageTag } = this.props;
     return (
@@ -18,4 +18,4 @@ class Modal extends React.Component {
     );
   }
 }
-  export default Modal
+export default Modal;

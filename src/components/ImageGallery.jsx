@@ -1,9 +1,20 @@
-// import React from 'react';
+import React from 'react';
 
-// export default class ImageGallery extends React.Component {
-//   render() {
-//     return <ul class="gallery">
+const ImageGallery = ({ showImages, images, openFullSize }) => {
+  return (
+    <ul className="gallery">
+      {showImages &&
+        images.map(image => (
+          <li className="gallery-item" key={image.id}>
+            <img
+              src={image.webformatURL}
+              alt={image.tags}
+              onClick={() => openFullSize(image.largeImageURL, image.tags)}
+            />
+          </li>
+        ))}
+    </ul>
+  );
+};
 
-//     </ul>;
-//   }
-// }
+export default ImageGallery;

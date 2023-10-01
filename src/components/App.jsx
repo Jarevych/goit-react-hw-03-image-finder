@@ -3,8 +3,8 @@ import { StyledAppContainer } from './App.styled';
 import { fetchImages } from './api';
 import { Dna } from 'react-loader-spinner';
 import Modal from './Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import Searchbar from './Searchbar';
+import ImageGallery from './ImageGallery';
 
 export class App extends React.Component {
   state = {
@@ -29,7 +29,6 @@ export class App extends React.Component {
   handleLoadMore = async e => {
     e.preventDefault();
     try {
-      console.log(this.state.page);
       const nextPage = this.state.page + 1;
       await this.setState({ page: nextPage }, async () => {});
     } catch (error) {}
@@ -46,10 +45,8 @@ export class App extends React.Component {
 
       this.setState(prevState => ({
         images: prevState.images ? [...prevState.images, ...hits] : hits,
-        loadMore: this.state.page < Math.ceil(totalHits / 12 )
+        loadMore: this.state.page < Math.ceil(totalHits / 12),
       }));
-
-      console.log(this.state.images);
     } catch (error) {
     } finally {
       this.setState({ isLoading: false });
@@ -62,7 +59,6 @@ export class App extends React.Component {
     ) {
       this.fetchImagesByQuery();
     }
-    console.log(this.state.images);
   }
 
   openFullSize = (imageUrl, imageTag) => {
@@ -78,21 +74,7 @@ export class App extends React.Component {
 
     return (
       <StyledAppContainer>
-        <header className="searchbar">
-          <form className="form" onSubmit={this.handleSearchSubmit}>
-            <input
-              className="input"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              name="searchImage"
-              placeholder="Search images and photos"
-            />
-            <button type="submit" className="searchbutton">
-              <FontAwesomeIcon icon={faMagnifyingGlass} beat />
-            </button>
-          </form>
-        </header>
+        <Searchbar onSubmit={this.handleSearchSubmit} />
         {this.state.isLoading && (
           <div className="spinner">
             <Dna
@@ -105,20 +87,12 @@ export class App extends React.Component {
             />
           </div>
         )}
-        <ul className="gallery">
-          {showImages &&
-            this.state.images.map(image => (
-              <li className="gallery-item" key={image.id}>
-                <img
-                  src={image.webformatURL}
-                  alt={image.tags}
-                  onClick={() =>
-                    this.openFullSize(image.largeImageURL, image.tags)
-                  }
-                />
-              </li>
-            ))}
-        </ul>
+        <ImageGallery
+          images={this.state.images}
+          showImages={showImages}
+          openFullSize={this.openFullSize}
+        />
+
         {this.state.loadMore && (
           <button
             className="loadbtn"
